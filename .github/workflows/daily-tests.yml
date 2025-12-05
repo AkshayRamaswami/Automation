@@ -28,6 +28,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
+	  - name: Clean old test reports
+	      run: |
+		    rm -rf test-output || true
+			rm -rf target/surefire-reports ||
+	  true
+	        rm -rf ExtentReport || true
+					 			
       - name: Run Maven tests on BrowserStack
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BS_USERNAME }}
