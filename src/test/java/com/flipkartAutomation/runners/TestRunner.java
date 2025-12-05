@@ -7,7 +7,7 @@ import org.testng.annotations.DataProvider;
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = {"StepDefinitions", "flipkartAutomation.hooks"},
-        tags = "@TC_05_scrolling_on_web_page",
+        tags = "@TC_03_Dropdown_handling",
         plugin = {
                 "pretty",
                 "html:target/cucumber-reports/cucumber.html",
