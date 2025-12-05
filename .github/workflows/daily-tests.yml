@@ -58,8 +58,8 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 587
           secure: true
-          username: ${{ secrets.MAIL_USERNAME }}   # full Gmail ID
-          password: ${{ secrets.MAIL_PASSWORD }}   # app password
+          username: ${{ secrets.SMTP_USERNAME }}   # full Gmail ID
+          password: ${{ secrets.SMTP_PASSWORD }}   # app password
           from:     ${{ secrets.MAIL_FROM }}
           to:       ${{ secrets.MAIL_TO }}
           subject:  "Automation run: ${{ job.status }} - ${{ github.workflow }}"
