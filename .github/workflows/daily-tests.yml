@@ -69,4 +69,6 @@ jobs:
             Status     : ${{ job.status }}
 
             Check BrowserStack runs here:
+
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
