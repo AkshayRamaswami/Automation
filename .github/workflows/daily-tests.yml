@@ -2,9 +2,8 @@ name: Daily BrowserStack Tests
 
 on:
   workflow_dispatch:
-  schedule:
-    # 9:00 AM IST = 03:30 UTC
-    - cron: "30 3 * * *"
+  # schedule:
+  #   - cron: "30 3 * * *"  # 9:00 AM IST if you want
 
 jobs:
   run-tests:
@@ -28,29 +27,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      # --- CLEAN OLD REPORTS (ONLY ExtentReport) ---
+      # 🔥 Delete any old reports before running tests
       - name: Clean old test reports
         run: |
+          rm -rf test-output || true
+          rm -rf target/surefire-reports || true
           rm -rf ExtentReport || true
 
-      # --- RUN TESTS ON BROWSERSTACK ---
       - name: Run Maven tests on BrowserStack
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BS_USERNAME }}
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BS_ACCESS_KEY }}
         run: mvn clean test -DrunMode=cloud -Dbrowser=chrome
 
-      # --- ZIP ONLY LATEST ExtentReport ---
-      - name: Zip latest ExtentReport only
+      # 📦 Zip ONLY the ExtentReport folder for this run
+      - name: Zip latest ExtentReport
         if: always()
         run: |
           if [ -d "test-output/ExtentReport" ]; then
             zip -r extent-report.zip test-output/ExtentReport
           else
-            echo "ExtentReport folder not found, nothing to zip."
+            echo "ExtentReport folder not found"
           fi
 
-      # --- UPLOAD ZIP AS ARTIFACT (OPTIONAL BUT USEFUL) ---
       - name: Upload extent report as artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,7 +57,6 @@ jobs:
           name: extent-report
           path: extent-report.zip
 
-      # --- SEND EMAIL WITH RESULTS (GMAIL) ---
       - name: Send email with results (Gmail)
         if: always()
         uses: dawidd6/action-send-mail@v4
@@ -66,23 +64,16 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 465
           secure: true
-
-          username: ${{ secrets.SMTP_USERNAME }}   # full Gmail ID
-          password: ${{ secrets.SMTP_PASSWORD }}   # Gmail app password
-
-          from: ${{ secrets.MAIL_FROM }}           # same Gmail ID usually
-          to: ${{ secrets.MAIL_TO }}               # where you want the mail
-
-          subject: "Automation run: ${{ job.status }} - Daily BrowserStack Tests"
-
+          username: ${{ secrets.SMTP_USERNAME }}   # full Gmail
+          password: ${{ secrets.SMTP_PASSWORD }}   # app password
+          from: ${{ secrets.MAIL_FROM }}
+          to: ${{ secrets.MAIL_TO }}
+          subject: "Automation run: ${{ job.status }} - ${{ github.workflow }}"
           body: |
             Repository : ${{ github.repository }}
             Workflow   : ${{ github.workflow }}
-            Run ID     : ${{ github.run_id }}
             Status     : ${{ job.status }}
 
             Check BrowserStack runs here:
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-          attachments: |
-            extent-report.zip
+          attachments: extent-report.zip
