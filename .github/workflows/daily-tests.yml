@@ -27,6 +27,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-m2-
+	  - name: Clean old test reports
+	    run: |
+	      rm -rf test-output || true		
 
       - name: Run Maven tests on BrowserStack
         env:
