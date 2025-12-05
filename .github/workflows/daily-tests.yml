@@ -28,9 +28,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 	  - name: Clean old test reports
-	    run: |
-	      rm -rf test-output || true		
-
+		      run: |
+	            rm -rf test-output || true
       - name: Run Maven tests on BrowserStack
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BS_USERNAME }}
@@ -41,8 +40,6 @@ jobs:
         if: always()
         run: |
           mkdir -p artifacts
-          if [ -d "test-output" ]; then cp -r test-output artifacts/; fi
-          if [ -d "target/surefire-reports" ]; then cp -r target/surefire-reports artifacts/; fi
           if [ -d "ExtentReport" ]; then cp -r ExtentReport artifacts/; fi
           cd artifacts
           zip -r ../test-reports.zip .
