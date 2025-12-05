@@ -31,8 +31,7 @@ jobs:
 	  - name: Clean old test reports
 	      run: |
 		    rm -rf test-output || true
-			rm -rf target/surefire-reports ||
-	  true
+			rm -rf target/surefire-reports || true
 	        rm -rf ExtentReport || true
 					 			
       - name: Run Maven tests on BrowserStack
