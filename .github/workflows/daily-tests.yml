@@ -1,10 +1,9 @@
 name: Daily BrowserStack Tests
 
 on:
-  schedule:
-    # 9:00 AM IST = 03:30 UTC
-    - cron: "30 3 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "30 3 * * *"
 
 jobs:
   run-tests:
