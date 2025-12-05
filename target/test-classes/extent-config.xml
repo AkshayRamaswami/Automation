@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extentreports>
+    <configuration>
+        <reportName>Flipkart BDD Automation Report</reportName>
+        <documentTitle>Flipkart Test Execution</documentTitle>
+        <theme>standard</theme>
+        <encoding>utf-8</encoding>
+        <protocol>https</protocol>
+    </configuration>
+</extentreports>
