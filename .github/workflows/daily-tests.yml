@@ -1,0 +1,82 @@
+name: Daily BrowserStack Tests
+
+on:
+  schedule:
+    # 9:00 AM IST = 03:30 UTC
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      - name: Run Maven tests on BrowserStack
+        id: tests
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BS_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BS_ACCESS_KEY }}
+        run: |
+          mvn clean test -DrunMode=cloud -Dbrowser=chrome
+
+      # 👉 Zip reports (adjust paths if needed)
+      - name: Zip test reports
+        if: always()
+        run: |
+          mkdir -p artifacts
+          # TestNG default reports
+          if [ -d "test-output" ]; then cp -r test-output artifacts/; fi
+          # Surefire reports
+          if [ -d "target/surefire-reports" ]; then cp -r target/surefire-reports artifacts/; fi
+          # Extent reports (if you have a folder for them)
+          if [ -d "ExtentReport" ]; then cp -r ExtentReport artifacts/; fi
+          cd artifacts
+          zip -r ../test-reports.zip .
+
+      - name: Upload reports as artifact (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: test-reports.zip
+
+      - name: Send email with results (Gmail)
+        if: always()   # send mail even if tests fail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: >
+            Caseys Automation - ${{ job.status }} - ${{ github.workflow }}
+          from: ${{ secrets.MAIL_FROM }}
+          to: ${{ secrets.MAIL_TO }}
+          secure: true
+          body: |
+            Daily automation run for repository: ${{ github.repository }}
+            Workflow: ${{ github.workflow }}
+            Branch: ${{ github.ref_name }}
+            Status: ${{ job.status }}
+
+            Check BrowserStack Automate dashboard for live/video sessions.
+            GitHub Actions logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          attachments: test-reports.zip
