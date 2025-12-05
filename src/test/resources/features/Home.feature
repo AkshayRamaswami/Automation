@@ -14,7 +14,7 @@ Examples:
 |2|
 
 
-@TC_03_Dropdown_handling
+@TC_03_Dropdown_handling @regression
 Scenario Outline: Mouse Hover Over Actions
 
 Given User is on home page for <tcNo>
@@ -25,7 +25,7 @@ Examples:
 |tcNo|
 |2|
 
-@TC_05_scrolling_on_web_page
+@TC_05_scrolling_on_web_page @regression
  Scenario Outline: Scrolling on the web page
 
 Given User is on home page for <tcNo>
