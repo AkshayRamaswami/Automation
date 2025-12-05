@@ -57,26 +57,29 @@ jobs:
           name: test-reports
           path: test-reports.zip
 
-      - name: Send email with results (Gmail)
-        if: always()   # send mail even if tests fail
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: >
-            Caseys Automation - ${{ job.status }} - ${{ github.workflow }}
-          from: ${{ secrets.MAIL_FROM }}
-          to: ${{ secrets.MAIL_TO }}
-          secure: true
-          body: |
-            Daily automation run for repository: ${{ github.repository }}
-            Workflow: ${{ github.workflow }}
-            Branch: ${{ github.ref_name }}
-            Status: ${{ job.status }}
+		  - name: Send email with results (Gmail)
+		          if: always()
+		          uses: dawidd6/action-send-mail@v4
+		          with:
+		            # Gmail SMTP
+		            server_address: smtp.gmail.com
+		            server_port: 465
+		            secure: true
 
-            Check BrowserStack Automate dashboard for live/video sessions.
-            GitHub Actions logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+		            # Credentials from GitHub Secrets
+		            username: ${{ secrets.MAIL_USERNAME }}   # full Gmail id
+		            password: ${{ secrets.MAIL_PASSWORD }}   # Gmail app password
 
-          attachments: test-reports.zip
+		            # Email details
+		            from: ${{ secrets.MAIL_FROM }}
+		            to: ${{ secrets.MAIL_TO }}
+		            subject: "Automation run: ${{ job.status }} - ${{ github.workflow }}"
+		            body: |
+		              Repository : ${{ github.repository }}
+		              Workflow   : ${{ github.workflow }}
+		              Status     : ${{ job.status }}
+
+		              Check BrowserStack for video & logs:
+		              ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+		            attachments: test-reports.zip
