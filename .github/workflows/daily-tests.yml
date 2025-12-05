@@ -44,8 +44,8 @@ jobs:
       - name: Zip latest ExtentReport only
         if: always()
         run: |
-          if [ -d "ExtentReport" ]; then
-            zip -r extent-report.zip ExtentReport
+          if [ -d "test-output/ExtentReport" ]; then
+            zip -r extent-report.zip test-output/ExtentReport
           else
             echo "ExtentReport folder not found, nothing to zip."
           fi
