@@ -34,8 +34,7 @@ public class HomePageStepDefinitions extends TestBase {
     @Given("User is on home page for {int}")
     public void user_is_on_home_page_for(Integer tcNo) {
     	
-        // 1. Open Excel and sheet
-    	
+        // 1. Open Excel and sheettt
         String filePath  = System.getProperty("user.dir")
                             + "/src/test/resources/TestData/Flipkart.xlsx";   // change path
         String sheetName = "Web";                             // change sheet
