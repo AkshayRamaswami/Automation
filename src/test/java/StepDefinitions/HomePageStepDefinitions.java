@@ -1,12 +1,5 @@
 package StepDefinitions;
 
-import com.flipkartAutomation.base.DriverFactory;
-
-import com.flipkartAutomation.base.TestBase;
-import com.flipkartAutomation.pages.HomePage;
-import com.flipkartAutomation.pages.LoginPage;
-import com.flipkartAutomation.utils.ExcelUtil;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -17,6 +10,12 @@ import java.util.Map;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+
+import com.automation.base.DriverFactory;
+import com.automation.base.TestBase;
+import com.automation.pages.HomePage;
+import com.automation.pages.LoginPage;
+import com.automation.utils.ExcelUtil;
 
 public class HomePageStepDefinitions extends TestBase {
 

@@ -1,12 +1,6 @@
 package StepDefinitions;
 
-import com.flipkartAutomation.base.DriverFactory;
 import StepDefinitions.HomePageStepDefinitions;
-import com.flipkartAutomation.base.TestBase;
-import com.flipkartAutomation.pages.LoginPage;
-import com.flipkartAutomation.utils.ExcelUtil;
-
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,6 +10,11 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+
+import com.automation.base.DriverFactory;
+import com.automation.base.TestBase;
+import com.automation.pages.LoginPage;
+import com.automation.utils.ExcelUtil;
 
 public class LoginStepDefinitions extends TestBase {
 
@@ -40,7 +39,12 @@ public class LoginStepDefinitions extends TestBase {
      @And("User verifies that he has landed on the Login page")
      public void User_verifies_that_he_has_landed_on_the_Login_page() {
     	 
-    	 loginPage.visibilityOf(); 
+    	 try {
+			loginPage.visibilityOf();
+		 } catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		 } 
      }
      @And("User enters Username,password and clicks on login button")
      public void User_enters_Username_password_and_clicks_on_login_button(){ 	 
